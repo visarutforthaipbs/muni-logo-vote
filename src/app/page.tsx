@@ -143,7 +143,7 @@ export default function Home() {
               fontWeight="extrabold"
               pt={4}
             >
-              ขอ 1 โหวตให้โลโก้ในใจเธอ ❤️
+              ขอ 1 โหวตให้โลโก้เทศบาลในใจเธอ ❤️
             </Heading>
           </Box>
 
