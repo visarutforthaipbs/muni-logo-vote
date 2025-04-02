@@ -42,9 +42,9 @@ export default function TopRightMenu() {
           <MenuList shadow="xl" minW="300px">
             <MenuItem onClick={onOpen}>
               <VStack align="start" width="100%" spacing={1}>
-                <Text fontWeight="bold">เกี่ยวกับโครงการ</Text>
+                <Text fontWeight="bold">เกี่ยวกับเว็บไซต์นี้</Text>
                 <Text fontSize="sm" color="gray.600">
-                  ดูรายละเอียดโครงการ
+                  เราทำไปทำไมกัน?
                 </Text>
               </VStack>
             </MenuItem>

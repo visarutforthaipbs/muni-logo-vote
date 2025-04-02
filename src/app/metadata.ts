@@ -2,7 +2,7 @@ import { Metadata } from "next";
 
 const title = "ขอ 1 โหวตให้โลโก้ในใจเธอ ❤️";
 const description =
-  "ร่วมโหวตโลโก้เทศบาลที่คุณชื่นชอบ ค้นหาและแชร์โลโก้เทศบาลทั่วประเทศไทย";
+  "ร่วมโหวตโลโก้เทศบาลที่คุณชื่นชอบ ค้นหาและแชร์โลโก้เทศบาลทั่วประเทศไทย พร้อมข้อมูลเทศบาลทั้ง 2,474 แห่งทั่วประเทศ";
 const url = "https://muni-logo-vote.vercel.app";
 
 export const metadata: Metadata = {
@@ -29,19 +29,21 @@ export const metadata: Metadata = {
     siteName: "ขอ 1 โหวตให้โลโก้ในใจเธอ ❤️",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "ขอ 1 โหวตให้โลโก้ในใจเธอ ❤️",
+        alt: "โลโก้เว็บไซต์โหวตโลโก้เทศบาล",
       },
     ],
     locale: "th_TH",
+    url: url,
   },
   twitter: {
     card: "summary_large_image",
     title,
     description,
-    images: ["/og-image.jpg"],
+    images: ["/og-image.png"],
+    site: "@creatorsgarten",
   },
   robots: {
     index: true,
@@ -54,7 +56,17 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  verification: {
-    google: "your-google-site-verification", // You'll need to add this later
+  alternates: {
+    canonical: url,
   },
+  authors: [{ name: "Creatorsgarten" }],
+  category: "Government",
+  keywords: [
+    "เทศบาล",
+    "โลโก้",
+    "ตราสัญลักษณ์",
+    "เลือกตั้งเทศบาล",
+    "การมีส่วนร่วม",
+    "ประชาธิปไตย",
+  ],
 };
