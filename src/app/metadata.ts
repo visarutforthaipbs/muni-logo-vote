@@ -27,6 +27,14 @@ export const metadata: Metadata = {
     title,
     description,
     siteName: "ขอ 1 โหวตให้โลโก้เทศบาลในใจเธอ ❤️",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "โลโก้เว็บไซต์โหวตโลโก้เทศบาล",
+      },
+    ],
     locale: "th_TH",
     url: url,
   },
@@ -34,6 +42,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title,
     description,
+    images: ["/og-image.png"],
     site: "@creatorsgarten",
   },
   robots: {
