@@ -1,0 +1,29 @@
+export interface Municipality {
+  _id?: string;
+  muni_code: string;
+  mun_name: string;
+  amp_name: string;
+  cwt_name: string;
+  logo: string;
+  voteCount: number;
+  Website?: string;
+  Facebook?: string;
+  amp?: string;
+  area?: string;
+  area_name?: string;
+  cwt?: string;
+  mun?: string;
+  mun_tao_n?: string;
+  type?: string;
+  reg?: string;
+  reg_name?: string;
+  tam?: string;
+  tam_name?: string;
+  tao?: string;
+  tao_code?: string;
+  tao_name?: string;
+  objectid?: string;
+  SHAPE__Len?: string;
+  SHAPE__Are?: string;
+  globalid?: string;
+}

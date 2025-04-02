@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🏛️ Municipal Logo Vote
 
-## Getting Started
+เว็บไซต์สำหรับโหวตโลโก้เทศบาลทั่วประเทศไทย เพื่อให้ผู้คนรู้จักเทศบาลของตนเองมากขึ้นในช่วงใกล้เลือกตั้งเทศบาลปี 2568
 
-First, run the development server:
+## 🚀 Features
+
+- 🔍 ค้นหาเทศบาลด้วยชื่อ, อำเภอ, หรือจังหวัด
+- 🎨 แสดงโลโก้เทศบาลจาก GitHub repository
+- 📊 แสดงสถิติการโหวตแบบ real-time
+- 📱 Responsive design รองรับทุกขนาดหน้าจอ
+- 🌐 SEO optimized
+- 🔄 Real-time updates ด้วย MongoDB
+
+## 🛠️ Tech Stack
+
+- Next.js 14
+- TypeScript
+- Chakra UI
+- MongoDB
+- Vercel (Deployment)
+
+## 🏗️ Project Structure
+
+```
+src/
+├── app/                 # Next.js app directory
+├── components/          # React components
+├── contexts/           # React contexts
+├── types/              # TypeScript types
+└── utils/              # Utility functions
+```
+
+## 🚀 Getting Started
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/visarutforthaipbs/muni-logo-vote.git
+cd muni-logo-vote
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+# or
+yarn install
+```
+
+3. Set up environment variables:
+   Create a `.env.local` file with the following variables:
+
+```env
+MONGODB_URI=your_mongodb_uri
+```
+
+4. Run the development server:
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📦 Deployment
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This project is configured for deployment on Vercel. Simply connect your GitHub repository to Vercel and it will automatically deploy your changes.
 
-## Learn More
+## 🤝 Contributing
 
-To learn more about Next.js, take a look at the following resources:
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📝 License
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Deploy on Vercel
+## 🙏 Acknowledgments
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Data collection by "🥊 นักสู้ PDF" group
+- Municipal logos from [GitHub repository](https://github.com/creatorsgarten/muni-logo)
+- Special thanks to all contributors and supporters

@@ -1,0 +1,19 @@
+{
+  "name": "LogoVote Thailand",
+  "short_name": "LogoVote",
+  "description": "โหวตโลโก้เทศบาลที่ชื่นชอบ",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2B6CB0",
+  "icons": [
+    {
+      "src": "/favicon-1.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "lang": "th",
+  "dir": "ltr"
+}

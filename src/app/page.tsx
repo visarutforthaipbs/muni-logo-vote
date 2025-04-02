@@ -1,103 +1,228 @@
-import Image from "next/image";
+"use client";
+
+import { useState, useEffect, useCallback, useRef } from "react";
+import {
+  Box,
+  Container,
+  VStack,
+  Heading,
+  Text,
+  SimpleGrid,
+  Center,
+  Icon,
+  Grid,
+  GridItem,
+  Divider,
+} from "@chakra-ui/react";
+import { FaSearch } from "react-icons/fa";
+import dynamic from "next/dynamic";
+import { useVote } from "@/contexts/VoteContext";
+import { parseCSV } from "@/utils/csvParser";
+import { Municipality } from "@/types/mongodb";
+import JsonLd from "@/components/JsonLd";
+
+// Dynamically import components that use client-side features
+const MunicipalityCard = dynamic(
+  () => import("@/components/MunicipalityCard"),
+  {
+    ssr: false,
+  }
+);
+const SearchFilters = dynamic(() => import("@/components/SearchFilters"), {
+  ssr: false,
+});
+const VotingStats = dynamic(() => import("@/components/VotingStats"), {
+  ssr: false,
+});
+const TopVoted = dynamic(() => import("@/components/TopVoted"), {
+  ssr: false,
+});
+const LogoGuidelines = dynamic(() => import("@/components/LogoGuidelines"), {
+  ssr: false,
+});
+const TopRightMenu = dynamic(() => import("@/components/TopRightMenu"), {
+  ssr: false,
+});
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const {
+    municipalities,
+    setMunicipalities,
+    searchMunicipalities,
+    displayedMunicipalities,
+    hasMore,
+    loadMore,
+  } = useVote();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedProvince, setSelectedProvince] = useState("");
+  const [provinces, setProvinces] = useState<string[]>([]);
+  const [filteredMunicipalities, setFilteredMunicipalities] = useState<
+    Municipality[]
+  >([]);
+  const observerRef = useRef<IntersectionObserver>();
+  const loadingRef = useCallback(
+    (node: HTMLDivElement) => {
+      if (observerRef.current) observerRef.current.disconnect();
+      observerRef.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          loadMore();
+        }
+      });
+      if (node) observerRef.current.observe(node);
+    },
+    [hasMore, loadMore]
+  );
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  // Load data from MongoDB
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const response = await fetch("/api/municipalities");
+        if (!response.ok) {
+          throw new Error("Failed to fetch municipalities");
+        }
+        const data = await response.json();
+        setMunicipalities(data);
+
+        // Extract unique provinces
+        const uniqueProvinces = Array.from(
+          new Set(data.map((m: Municipality) => m.cwt_name))
+        ).sort() as string[];
+        setProvinces(uniqueProvinces);
+      } catch (error) {
+        console.error("Error loading data:", error);
+      }
+    };
+
+    loadData();
+  }, [setMunicipalities]);
+
+  // Filter municipalities when search query or province changes
+  useEffect(() => {
+    let filtered = [...municipalities];
+
+    // Apply search filter
+    if (searchQuery) {
+      const searchTerms = searchQuery.toLowerCase().split(" ");
+      filtered = filtered.filter((municipality) => {
+        const searchString =
+          `${municipality.mun_name} ${municipality.amp_name} ${municipality.cwt_name}`.toLowerCase();
+        return searchTerms.every((term) => searchString.includes(term));
+      });
+    }
+
+    // Apply province filter
+    if (selectedProvince) {
+      filtered = filtered.filter((m) => m.cwt_name === selectedProvince);
+    }
+
+    setFilteredMunicipalities(filtered);
+  }, [searchQuery, selectedProvince, municipalities]);
+
+  // Display municipalities with pagination
+  const paginatedMunicipalities = filteredMunicipalities.slice(
+    0,
+    displayedMunicipalities.length
+  );
+  const hasMoreFiltered =
+    paginatedMunicipalities.length < filteredMunicipalities.length;
+
+  return (
+    <>
+      <JsonLd type="website" />
+      <TopRightMenu />
+      <Container maxW="100%" px={{ base: 4, xl: 8 }} py={8}>
+        <VStack spacing={8} align="stretch">
+          <Box textAlign="center">
+            <Heading
+              as="h1"
+              size="2xl"
+              mb={4}
+              bgGradient="linear(to-r, brand.primary, brand.accent1)"
+              bgClip="text"
+              fontWeight="extrabold"
+              pt={4}
+            >
+              ขอ 1 โหวตให้โลโก้ในใจเธอ ❤️
+            </Heading>
+          </Box>
+
+          <Grid
+            templateColumns={{ base: "1fr", lg: "1fr 350px" }}
+            gap={{ base: 6, lg: 8 }}
+            alignItems="start"
+            maxW="2400px"
+            mx="auto"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+            <GridItem>
+              <VStack spacing={6} align="stretch">
+                <SearchFilters
+                  searchQuery={searchQuery}
+                  onSearchChange={setSearchQuery}
+                  selectedProvince={selectedProvince}
+                  onProvinceChange={setSelectedProvince}
+                  provinces={provinces}
+                />
+
+                {filteredMunicipalities.length > 0 ? (
+                  <>
+                    <SimpleGrid
+                      columns={{ base: 1, sm: 2, lg: 3, xl: 4, "2xl": 5 }}
+                      spacing={{ base: 4, lg: 6 }}
+                      w="full"
+                    >
+                      {paginatedMunicipalities.map((municipality) => (
+                        <MunicipalityCard
+                          key={municipality.muni_code}
+                          municipality={municipality}
+                        />
+                      ))}
+                    </SimpleGrid>
+                    {hasMoreFiltered && (
+                      <Box
+                        ref={loadingRef}
+                        h="20px"
+                        w="full"
+                        textAlign="center"
+                      >
+                        <Text color="gray.500">กำลังโหลด...</Text>
+                      </Box>
+                    )}
+                  </>
+                ) : (
+                  <Center py={12}>
+                    <VStack spacing={4}>
+                      <Icon as={FaSearch} boxSize={12} color="gray.400" />
+                      <Text color="gray.500" fontSize="lg">
+                        ไม่พบเทศบาลที่ค้นหา
+                      </Text>
+                    </VStack>
+                  </Center>
+                )}
+              </VStack>
+            </GridItem>
+
+            <GridItem>
+              <VStack spacing={6} align="stretch">
+                <Box position="static" top="24px">
+                  <TopVoted />
+                </Box>
+                <VotingStats />
+              </VStack>
+            </GridItem>
+          </Grid>
+        </VStack>
+      </Container>
+
+      {/* Fixed position LogoGuidelines */}
+      <Box
+        position="fixed"
+        bottom={{ base: 4, md: 8 }}
+        right={{ base: 4, md: 8 }}
+        zIndex={10}
+      >
+        <LogoGuidelines />
+      </Box>
+    </>
   );
 }
